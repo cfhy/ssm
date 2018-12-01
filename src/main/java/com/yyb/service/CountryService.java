@@ -23,4 +23,34 @@ public class CountryService extends BaseService<Country> {
     public Integer deleteById(int id) {
         return countryMapper.deleteById(id);
     }
+
+    /**
+     * 演示事务
+     * 由于service类上加了@Transactional(readOnly = true)注解，所以除了查询之外，必须添加@Transactional(readOnly = false)
+     *
+     * @param id
+     * @return
+     */
+    @Transactional(readOnly = false, rollbackFor = {RuntimeException.class, Exception.class})
+    public void transactional(int id) {
+        Country country = new Country();
+        country.setId(id);
+        country.setCountrycode("china");
+        country.setCountryname("中华人民共和国");
+        countryMapper.insert(country);
+
+        Country country1 = countryMapper.queryOne(id);
+        if (country1 != null) {
+            //修改只需要设置ID和要修改的值即可，不需要修改的设置为null,如下：
+            Country country2 = new Country();
+            country2.setId(id);
+            country2.setCountryname("中国");
+
+            //也可以下查询再赋值，如下：
+//            country1.setCountryname("中国");
+//            countryMapper.update(country1);
+        }
+
+        countryMapper.deleteById(id);
+    }
 }

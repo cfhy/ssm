@@ -47,6 +47,11 @@ public class CountryServiceTest {
     }
 
     @Test
+    public  void  trans() {
+        countryService.transactional(10);
+    }
+
+    @Test
     public  void  findOne() {
         Country one = countryService.queryOne(10);
         System.out.println("==============================");
