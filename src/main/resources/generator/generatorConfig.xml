@@ -3,6 +3,8 @@
         "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 
 <generatorConfiguration>
+    <!--导入属性配置-->
+    <properties resource="application-dev.properties"></properties>
     <context id="MySqlContext" targetRuntime="MyBatis3" defaultModelType="flat">
         <!-- beginningDelimiter和endingDelimiter：指明数据库的用于标记数据库对象名的符号，
         比如ORACLE就是双引号，MYSQL默认是`反引号； -->
@@ -15,10 +17,10 @@
             <property name="suppressAllComments" value="true"/>
         </commentGenerator>
         <!--数据库链接URL，用户名、密码 -->
-        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://localhost:3306/trans_test"
-                        userId="root"
-                        password="123456">
+        <jdbcConnection driverClass="${spring.datasource.driver-class-name}"
+                        connectionURL="${spring.datasource.url}"
+                        userId="${spring.datasource.username}"
+                        password="${spring.datasource.password}">
         </jdbcConnection>
         <javaTypeResolver>
             <!-- false：JDBC DECIMAL、NUMERIC类型解析为Integer，默认方式 -->
@@ -45,7 +47,7 @@
          enableCountByExample：生成一个对应domainObjectName的Example类，false则不生成，默认策略是true
          -->
         <table tableName="%"
-               enableCountByExample="true"
+               enableCountByExample="false"
                enableUpdateByExample="false"
                enableDeleteByExample="false"
                enableSelectByExample="false"
