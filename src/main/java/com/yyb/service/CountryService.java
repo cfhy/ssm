@@ -1,6 +1,7 @@
 package com.yyb.service;
 
 import com.yyb.base.BaseService;
+import com.yyb.common.utils.RedisUtils;
 import com.yyb.mapper.CountryMapper;
 import com.yyb.model.Country;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,14 +10,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
-@Transactional(readOnly = true)
+@Transactional(readOnly = true,rollbackFor = {RuntimeException.class, Exception.class} )
 public class CountryService extends BaseService<Country> {
     @Autowired
     CountryMapper countryMapper;
+    @Autowired
+    RedisUtils redisUtils;
 
     public Country queryOne(int id) {
         Country country = countryMapper.queryOne(id);
-        return country;
+        String key="SSM:COUNTRY:ID:"+id;
+        if(!redisUtils.hasKey(key)){
+            redisUtils.set(key,country);
+        }
+        Country obj = (Country)redisUtils.get(key);
+        return obj;
     }
 
     @Transactional(readOnly = false, rollbackFor = {RuntimeException.class, Exception.class})

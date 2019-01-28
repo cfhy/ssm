@@ -1,7 +1,8 @@
 package com.yyb.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.yyb.Application;
-import com.yyb.common.utils.FastJsonUtils;
+import com.yyb.common.utils.JacksonUtils;
 import com.yyb.model.Country;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -55,7 +56,11 @@ public class CountryServiceTest {
     public  void  findOne() {
         Country one = countryService.queryOne(10);
         System.out.println("==============================");
-        System.out.println(FastJsonUtils.objectToJson(one));
+        try {
+            System.out.println(JacksonUtils.obj2json(one));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
         System.out.println("==============================");
         assertNotEquals(null,one);
     }
