@@ -1,7 +1,8 @@
-package cn.itcast.gjp.service;
+package com.yyb.service;
 
-import cn.itcast.gjp.dao.ZhangWuDao;
-import cn.itcast.gjp.domain.ZhangWu;
+
+import com.yyb.dao.ZhangWuDao;
+import com.yyb.model.ZhangWu;
 
 import java.util.List;
 
@@ -19,8 +20,8 @@ public class ZhangWuService {
 	 *  此方法,由控制层调用, 去调用dao层的方法
 	 *  返回存储ZhangWu对象的List集合
 	 */
-    public List<ZhangWu> selectAll(){
-        return dao.selectAll();
+    public List<ZhangWu> selectAll(Integer memberId){
+        return dao.selectAll(memberId);
     }
 
     /*
@@ -36,8 +37,8 @@ public class ZhangWuService {
      * 调用dao层的方法,传递2个日期字符串
      * 获取到查询结果集
      */
-    public List<ZhangWu> select(String startDate,String endDate){
-        return dao.select(startDate, endDate);
+    public List<ZhangWu> select(String startDate,String endDate,Integer memberId){
+        return dao.select(startDate, endDate,memberId);
     }
 
     /*
@@ -56,5 +57,14 @@ public class ZhangWuService {
 	 */
     public void deleteZhangWu(int zwid) {
         dao.deleteZhangWu(zwid);
+    }
+
+    /*
+     * 定义方法，实现查询账务功能
+     * 由控制层调用，传递主键id
+     * 调用dao层方法，传递主键id
+     */
+    public ZhangWu detail(int zwid) {
+        return  dao.detail(zwid);
     }
 }

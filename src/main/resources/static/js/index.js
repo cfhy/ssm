@@ -90,7 +90,6 @@ $(function ($) {
             $item.children('.submenu').slideUp('fast');
         }
     });
-    GetLoadNav();
     $('body').on('mouseenter', '#page-wrapper.nav-small #sidebar-nav .dropdown-toggle', function (e) {
         if ($(document).width() >= 992) {
             var $item = $(this).parent();
@@ -150,27 +149,3 @@ $(function ($) {
         }, 300);
     });
 });
-function GetLoadNav() {
-    var data = top.clients.authorizeMenu;
-    var _html = "";
-    $.each(data, function (i) {
-        var row = data[i];
-        if (row.F_ParentId == "0") {
-            _html += '<li>';
-            _html += '<a data-id="' + row.F_Id + '" href="#" class="dropdown-toggle"><i class="' + row.F_Icon + '"></i><span>' + row.F_FullName + '</span><i class="fa fa-angle-right drop-icon"></i></a>';
-            var childNodes = row.ChildNodes;
-            if (childNodes.length > 0) {
-                _html += '<ul class="submenu">';
-                $.each(childNodes, function (i) {
-                    var subrow = childNodes[i];
-                    _html += '<li>';
-                    _html += '<a class="menuItem" data-id="' + subrow.F_Id + '" href="' + subrow.F_UrlAddress + '" data-index="' + subrow.F_SortCode + '">' + subrow.F_FullName + '</a>';
-                    _html += '</li>';
-                });
-                _html += '</ul>';
-            }
-            _html += '</li>';
-        }
-    });
-    $("#sidebar-nav ul").prepend(_html);
-}

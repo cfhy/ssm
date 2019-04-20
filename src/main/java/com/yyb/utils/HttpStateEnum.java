@@ -1,4 +1,4 @@
-package com.yyb.common.response;
+package com.yyb.utils;
 
 /**
  * 返回状态

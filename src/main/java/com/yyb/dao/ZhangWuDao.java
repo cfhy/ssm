@@ -1,8 +1,9 @@
-package cn.itcast.gjp.dao;
+package com.yyb.dao;
 
-import cn.itcast.gjp.domain.ZhangWu;
-import cn.itcast.gjp.tools.JDBCUtils;
+import com.yyb.utils.JDBCUtils;
+import com.yyb.model.ZhangWu;
 import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 
 import java.sql.SQLException;
@@ -20,12 +21,13 @@ public class ZhangWuDao {
 	 * 方法,由业务层调用
 	 * 结果集,将所有的账务数据,存储到Bean对象中,存储到集合中
 	 */
-    public List<ZhangWu> selectAll(){
+    public List<ZhangWu> selectAll(Integer memberId){
         try{
             //查询账务数据的SQL语句
-            String sql = "SELECT * FROM gjp_zhangwu";
+            String sql = "SELECT * FROM gjp_zhangwu WHERE memberId=?";
+            Object[] params = {memberId};
             //调用qr对象的方法,query方法,结果集BeanListHandler
-            List<ZhangWu> list = qr.query(sql, new BeanListHandler<>(ZhangWu.class));
+            List<ZhangWu> list = qr.query(sql, new BeanListHandler<>(ZhangWu.class),params);
             return list;
         }catch(SQLException ex){
             System.out.println(ex);
@@ -38,12 +40,12 @@ public class ZhangWuDao {
 	 * 由业务层调用,查询结果集存储到Bean对象,存储到List集合
 	 * 调用者传递2个日期字符串
 	 */
-    public List<ZhangWu> select(String startDate,String endDate){
+    public List<ZhangWu> select(String startDate,String endDate,Integer memberId){
         try{
             //拼写条件查询的SQL语句
-            String sql = "SELECT * FROM gjp_zhangwu WHERE createtime BETWEEN ? AND ?";
+            String sql = "SELECT * FROM gjp_zhangwu WHERE createtime BETWEEN ? AND ? AND ?";
             //定义对象数组,存储?占位符
-            Object[] params = {startDate,endDate};
+            Object[] params = {startDate,endDate,memberId};
             //调用qr对象的方法query查询数据表,获取结果集
             return qr.query(sql, new BeanListHandler<>(ZhangWu.class),params);
         }catch(SQLException ex){
@@ -60,10 +62,10 @@ public class ZhangWuDao {
     public void addZhangWu(ZhangWu zw) {
         try{
             //拼接添加数据的sql
-            String sql = "INSERT INTO gjp_zhangwu (flname,money,zhanghu,createtime,description) VALUES(?,?,?,?,?)";
+            String sql = "INSERT INTO gjp_zhangwu (memberId,flname,money,zhanghu,type,createtime,description) VALUES(?,?,?,?,?,?,?)";
             //创建对象数组，处处5个占位符的实际参数
             //实际参数来源是传递过来的对象ZhangWu
-            Object[] params = {zw.getFlname(),zw.getMoney(),zw.getZhanghu(),zw.getCreatetime(),zw.getDescription()};
+            Object[] params = {zw.getMemberId(),zw.getFlname(),zw.getMoney(),zw.getZhanghu(),zw.getType(),zw.getCreatetime(),zw.getDescription()};
             //调用qr对象中的方法update执行添加
             qr.update(sql, params);
         }catch(SQLException ex) {
@@ -80,9 +82,9 @@ public class ZhangWuDao {
     public void editZhangWu(ZhangWu zw) {
         try {
             //更新数据的SQL
-            String sql = "UPDATE gjp_zhangwu SET flname=?,money=?,zhanghu=?,createtime=?,description=? WHERE zwid=?";
+            String sql = "UPDATE gjp_zhangwu SET flname=?,money=?,zhanghu=?,type=?,description=? WHERE zwid=?";
             //定义对象数组，封装所有数据
-            Object[] params = {zw.getFlname(),zw.getMoney(),zw.getZhanghu(),zw.getCreatetime(),zw.getDescription(),zw.getZwid()};
+            Object[] params = {zw.getFlname(),zw.getMoney(),zw.getZhanghu(),zw.getType(),zw.getDescription(),zw.getZwid()};
             //调用qr对象方法update执行更新
             qr.update(sql, params);
         } catch (SQLException ex) {
@@ -104,6 +106,24 @@ public class ZhangWuDao {
         } catch (SQLException ex) {
             System.out.println(ex);
             throw new RuntimeException("删除账务失败");
+        }
+    }
+
+    /*
+     * 定义方法，实现查询业务
+     * 业务层调用，传递主键id
+     */
+    public ZhangWu detail(int zwid) {
+        try{
+            //拼写条件查询的SQL语句
+            String sql = "SELECT * FROM gjp_zhangwu WHERE zwid= ?";
+            //定义对象数组,存储?占位符
+            Object[] params = {zwid};
+            //调用qr对象的方法query查询数据表,获取结果集
+            return qr.query(sql, new BeanHandler<>(ZhangWu.class),params);
+        }catch(SQLException ex){
+            System.out.println(ex);
+            throw new RuntimeException("条件查询失败");
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.yyb.common.utils;
+package com.yyb.utils;
 /*
  *  使用DBCP实现数据库的连接池
  *  连接池配置,自定义类,
@@ -19,6 +19,7 @@ public class JDBCUtils {
         //数据库连接信息,必须的
         datasource.setDriverClassName("com.mysql.jdbc.Driver");
         datasource.setUrl("jdbc:mysql://47.107.131.149:3306/gjp");
+        datasource.setConnectionProperties("useUnicode=true;characterEncoding=UTF-8;autoReconnect=true;allowMultiQueries=true;serverTimezone=CST;useSSL=false");
         datasource.setUsername("root");
         datasource.setPassword("YYBrhr_2018");
         //对象连接池中的连接数量配置,可选的
