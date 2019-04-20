@@ -42,12 +42,15 @@
                         <div id="user-left-box" class="clearfix hidden-sm hidden-xs dropdown profile2-dropdown">
                             <img alt="" src="img/samples/scarlet-159.png"/>
                             <div class="user-box">
-                                <span class="name">欢迎您，杨永斌</span>
+                                <span class="name">欢迎您，<span id="userName"></span></span>
+                            </div>
+                            <div  class="user-box">
+                                <a id="logOut" href="#">点我退出</a>
                             </div>
                         </div>
                         <div class="collapse navbar-collapse navbar-ex1-collapse" id="sidebar-nav">
                             <ul class="nav nav-pills nav-stacked">
-                                <li class="common" data-id="/member" >
+                                <li class="common" data-id="/member" id="userManage" style="display: none;">
                                     <a href="#">
                                         <i class="fa fa-star-o"></i>
                                         <span>用户管理</span>
@@ -84,6 +87,30 @@
     $('body').on('click', '#sidebar-nav li', function (e) {
        $("#NFine_iframe").attr('src',$(this).attr('data-id'));
     });
+    $.ajax({
+        url: "/member/getMemberInfo",
+        type: "post",
+        dataType: "json",
+        success: function (data) {
+            $("#userName").text(data.userName);
+            if(data.isAdmin){
+                $("#userManage").show();
+            }
+        }
+    });
+    //退出
+    $("#logOut").click(function () {
+        $.ajax({
+            url: "/member/logout",
+            type: "post",
+            dataType: "json",
+            success: function () {
+               location.href='/login';
+            }
+        });
+    });
+
+
 </script>
 </body>
 </html>

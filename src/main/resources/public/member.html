@@ -37,10 +37,6 @@
             });
             $("#btn_search").click(function () {
                 var userName= $("#txt_name").val();
-                if(!userName){
-                    alert('用户名不能为空');
-                    return false;
-                }
                 $gridList.jqGrid('setGridParam', {
                     postData: { userName:userName },
                 }).trigger('reloadGrid');
@@ -106,6 +102,9 @@
                 <td>
                     <div class="input-group">
                         <input id="txt_name" type="text" class="form-control" placeholder="会员名称" style="width: 200px;">
+                        <span class="input-group-btn">
+                            <button id="btn_search" type="button" class="btn  btn-primary"><i class="fa fa-search"></i></button>
+                        </span>
                     </div>
                 </td>
             </tr>
