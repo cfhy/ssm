@@ -22,8 +22,8 @@ public class MemberService {
 	 *  此方法,由控制层调用, 去调用dao层的方法
 	 *  返回存储ZhangWu对象的List集合
 	 */
-    public List<Member> selectAll(){
-        return dao.selectAll();
+    public List<Member> selectAll(String userName){
+        return dao.selectAll(userName);
     }
 
     /*
@@ -60,5 +60,14 @@ public class MemberService {
      */
     public Member findMember(String userName, String password){
       return dao.findMember(userName,password);
+    }
+
+    /**
+     * 查询会员详情
+     * @param memberId
+     * @return
+     */
+    public Member detail(Integer memberId){
+        return dao.detail(memberId);
     }
 }

@@ -180,9 +180,6 @@ $.submitForm = function (options) {
     var options = $.extend(defaults, options);
     $.loading(true, options.loading);
     window.setTimeout(function () {
-        if ($('[name=__RequestVerificationToken]').length > 0) {
-            options.param["__RequestVerificationToken"] = $('[name=__RequestVerificationToken]').val();
-        }
         $.ajax({
             url: options.url,
             data: options.param,

@@ -26,13 +26,10 @@
                 colModel: [
                     {label: "主键", name: "zwid", hidden: true, key: true},
                     {label: "分类名称", name: "flname",width: 150, align: 'left'},
-                    {label: '金额', name: 'money', width: 150, align: 'left'},
+                    {label: '金额', name: 'money', width: 150, align: 'left',formatter: "currency"},
                     {label: '账户类型', name: 'type', width: 150, align: 'left'},
                     {label: '账户', name: 'zhanghu', width: 150, align: 'left'},
-                    {
-                        label: '创建时间', name: 'createtime', width: 80, align: 'left',
-                        formatter: "date", formatoptions: {srcformat: 'Y-m-d', newformat: 'Y-m-d'}
-                    },
+                    {label: '创建时间', name: 'createtime', width: 80, align: 'left'},
                     {label: '描述', name: 'description', width: 300, align: 'left'},
                 ]
             });

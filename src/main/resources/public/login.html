@@ -68,7 +68,7 @@
                 }
                 $("#login_button").attr('disabled', 'disabled').find('span').html("loading...");
                 $.ajax({
-                    url: "/commitLogin",
+                    url: "/member/login",
                     data: { username: $.trim($username.val()), password: $.trim($password.val()) },
                     type: "post",
                     dataType: "json",

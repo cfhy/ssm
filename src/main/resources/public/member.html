@@ -21,62 +21,59 @@
         function gridList() {
             var $gridList = $("#gridList");
             $gridList.dataGrid({
-                url: "/zhangwu/list",
+                url: "/member/list",
                 height: $(window).height() - 96,
                 colModel: [
-                    {label: "主键", name: "zwid", hidden: true, key: true},
-                    {label: "分类名称", name: "flname",width: 150, align: 'left'},
-                    {label: '金额', name: 'money', width: 150, align: 'left'},
-                    {label: '账户类型', name: 'type', width: 150, align: 'left'},
-                    {label: '账户', name: 'zhanghu', width: 150, align: 'left'},
+                    {label: "主键", name: "id", hidden: true, key: true},
+                    {label: "用户名", name: "userName",width: 150, align: 'left'},
+                    {label: '密码', name: 'password', width: 150, align: 'left'},
                     {
-                        label: '创建时间', name: 'createtime', width: 80, align: 'left',
-                        formatter: "date", formatoptions: {srcformat: 'Y-m-d', newformat: 'Y-m-d'}
-                    },
-                    {label: '描述', name: 'description', width: 300, align: 'left'},
+                        label: '管理员', name: 'isAdmin', width: 80, align: 'left',
+                        formatter:function(celval, options, rowdata){
+                            return celval===1?'是':'否';
+                        }
+                    }
                 ]
             });
             $("#btn_search").click(function () {
-                var startDate= $("#txt_startDate").val();
-                var endDate= $("#txt_endDate").val();
-                if(!startDate || !endDate){
-                    alert('起始日期或者结束日期不能为空');
+                var userName= $("#txt_name").val();
+                if(!userName){
+                    alert('用户名不能为空');
                     return false;
                 }
                 $gridList.jqGrid('setGridParam', {
-                    postData: { startDate:startDate,endDate: endDate },
+                    postData: { userName:userName },
                 }).trigger('reloadGrid');
-
             });
         }
 
         function btn_add() {
             $.modalOpen({
                 id: "Form",
-                title: "新增账务",
-                url: "/addBill",
+                title: "新增会员",
+                url: "/addMember",
                 width: "450px",
-                height: "370px",
+                height: "300px",
                 btn: null
             });
         }
 
         function btn_edit() {
-            var keyValue = $("#gridList").jqGridRowValue().zwid;
+            var keyValue = $("#gridList").jqGridRowValue().id;
             $.modalOpen({
                 id: "Form",
-                title: "修改账务",
-                url: "/addBill?keyValue=" + keyValue,
+                title: "修改会员",
+                url: "/addMember?keyValue=" + keyValue,
                 width: "450px",
-                height: "370px",
+                height: "300px",
                 btn: null
             });
         }
 
         function btn_delete() {
             $.deleteForm({
-                url: "/zhangwu/delete",
-                param: {zwid: $("#gridList").jqGridRowValue().zwid},
+                url: "/member/delete",
+                param: {memberId: $("#gridList").jqGridRowValue().id},
                 success: function () {
                     $.currentWindow().$("#gridList").trigger("reloadGrid");
                 }
@@ -108,11 +105,7 @@
             <tr>
                 <td>
                     <div class="input-group">
-                        <input id="txt_startDate" type="text" class="form-control" placeholder="起始日期" style="width: 200px;">
-                        <input id="txt_endDate" type="text" class="form-control" placeholder="截止日期" style="width: 200px;">
-                        <span class="input-group-btn">
-                            <button id="btn_search" type="button" class="btn  btn-primary"><i class="fa fa-search"></i></button>
-                        </span>
+                        <input id="txt_name" type="text" class="form-control" placeholder="会员名称" style="width: 200px;">
                     </div>
                 </td>
             </tr>

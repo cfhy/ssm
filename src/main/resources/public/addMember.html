@@ -17,39 +17,33 @@
         $(function () {
             if (!!keyValue) {
                 $.ajax({
-                    url: "/zhangwu/detail",
-                    data: {zwid: keyValue},
+                    url: "/member/detail",
+                    data: {memberId: keyValue},
                     dataType: "json",
                     async: false,
                     success: function (data) {
                         $("#form1").formSerialize(data);
+                        if(data.isAdmin){
+                            $("#isAdmin").prop("checked","checked");
+                        }
                     }
                 });
             }
         });
         function submitForm() {
             var postData = $("#form1").formSerialize();
-            postData.type= $("#type").find("option:selected").text().replace(/　　/g, '');
-            postData.zwid=keyValue ||'';
-            if(!postData.flname){
-                alert("分类名称不能为空");
+            postData.isAdmin= $("#isAdmin").prop("checked")?1:0;
+            postData.id=keyValue ||'';
+            if(!postData.userName){
+                alert("用户名不能为空");
                 return false;
             }
-            if(!postData.money){
-                alert("金额不能为空");
+            if(!postData.password){
+                alert("密码不能为空");
                 return false;
             }
-            if(!/\d+/.test(postData.money)){
-                alert("金额只能输入数字");
-                return false;
-            }
-            if(!postData.zhanghu){
-                alert("账户不能为空");
-                return false;
-            }
-
             $.submitForm({
-                url: "/zhangwu/save",
+                url: "/member/save",
                 param: postData,
                 success: function () {
                     $.currentWindow().$("#gridList").trigger("reloadGrid");
@@ -67,37 +61,23 @@
                     <div class="panel-body" style="width: 98%;">
                         <table class="form">
                             <tr>
-                                <th class="formTitle">分类名称</th>
+                                <th class="formTitle">用户名</th>
                                 <td class="formValue">
-                                    <input id="flname" name="flname" type="text" class="form-control required" placeholder="请输入分类名称"/>
+                                    <input id="userName" name="userName" type="text" class="form-control required" placeholder="请输入用户名"/>
                                 </td>
                             </tr>
                             <tr>
-                                <th class="formTitle">记账金额</th>
+                                <th class="formTitle">密码</th>
                                 <td class="formValue">
-                                    <input id="money" name="money" type="text" class="form-control required"
-                                           placeholder="请输入记账金额"/>
+                                    <input id="password" name="password" type="text" class="form-control required" placeholder="请输入密码"/>
                                 </td>
                             </tr>
                             <tr>
-                                <th class="formTitle">账户</th>
-                                <td class="formValue">
-                                    <input id="zhanghu" name="zhanghu" class="form-control required"  placeholder="请输入账户"/>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th class="formTitle">账务类型</th>
-                                <td class="formValue">
-                                    <select id="type" name="type" class="form-control required">
-                                        <option >收入</option>
-                                        <option selected>支出</option>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th class="formTitle">账务描述</th>
-                                <td class="formValue">
-                                    <textarea id="description" name="description" type="text" class="form-control required" placeholder="请输入账务描述"  style="height: 60px;"></textarea>
+                                <th class="formTitle" style="height: 35px;">是否为管理员</th>
+                                <td class="formValue" colspan="1" style="padding-top: 1px;">
+                                    <div class="ckbox">
+                                        <input id="isAdmin" name="isAdmin" type="checkbox"><label for="isAdmin"></label>
+                                    </div>
                                 </td>
                             </tr>
                         </table>
