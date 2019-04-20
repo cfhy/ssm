@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link href="css/framework-font.css" rel="stylesheet" />
+    <link href="css/framework-theme.css" rel="stylesheet" />
+    <script src="js/jquery/jquery-2.1.1.min.js"></script>
+    <script src="js/bootstrap/bootstrap.js"></script>
+    <link href="js/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <link href="js/select2/select2.min.css" rel="stylesheet" />
+    <script src="js/select2/select2.min.js"></script>
+    <link href="css/framework-ui.css" rel="stylesheet" />
+    <script src="js/framework-ui.js"></script>
+    <script>
+        var keyValue = $.request("keyValue");
+        $(function () {
+            if (!!keyValue) {
+                $.ajax({
+                    url: "/zhangwu/detail",
+                    data: {zwid: keyValue},
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        $("#form1").formSerialize(data);
+                    }
+                });
+            }
+        });
+        function submitForm() {
+            var postData = $("#form1").formSerialize();
+            postData.type= $("#type").find("option:selected").text().replace(/　　/g, '');
+            postData.zwid=keyValue ||'';
+            if(!postData.flname){
+                alert("分类名称不能为空");
+                return false;
+            }
+            if(!postData.money){
+                alert("金额不能为空");
+                return false;
+            }
+            if(!/\d+/.test(postData.money)){
+                alert("金额只能输入数字");
+                return false;
+            }
+            if(!postData.zhanghu){
+                alert("账户不能为空");
+                return false;
+            }
+
+            $.submitForm({
+                url: "/zhangwu/save",
+                param: postData,
+                success: function () {
+                    $.currentWindow().$("#gridList").trigger("reloadGrid");
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<form id="form1">
+    <div class="widget-body">
+        <div class="step-content" id="wizard-steps" style="border-left: none; border-bottom: none; border-right: none;">
+            <div class="step-pane active" id="step-1" style="margin: 10px; margin-bottom: 0px;">
+                <div class="panel panel-default">
+                    <div class="panel-body" style="width: 98%;">
+                        <table class="form">
+                            <tr>
+                                <th class="formTitle">分类名称</th>
+                                <td class="formValue">
+                                    <input id="flname" name="flname" type="text" class="form-control required" placeholder="请输入分类名称"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="formTitle">记账金额</th>
+                                <td class="formValue">
+                                    <input id="money" name="money" type="text" class="form-control required"
+                                           placeholder="请输入记账金额"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="formTitle">账户</th>
+                                <td class="formValue">
+                                    <input id="zhanghu" name="zhanghu" class="form-control required"  placeholder="请输入账户"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="formTitle">账务类型</th>
+                                <td class="formValue">
+                                    <select id="type" name="type" class="form-control required">
+                                        <option >收入</option>
+                                        <option selected>支出</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="formTitle">账务描述</th>
+                                <td class="formValue">
+                                    <textarea id="description" name="description" type="text" class="form-control required" placeholder="请输入账务描述"  style="height: 60px;"></textarea>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-button" id="wizard-actions" style="text-align:center;">
+            <a id="btn_finish" class="btn btn-default" onclick="submitForm()">提交</a>
+        </div>
+    </div>
+</form>
+
+</body>
+</html>
