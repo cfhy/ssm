@@ -1,41 +1,35 @@
 package com.yyb.config;
 
 import com.yyb.common.response.ResponseData;
-import org.springframework.http.HttpStatus;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.UnexpectedRollbackException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 /**
+ * Created by Administrator on 2017/11/7.
  * 统一异常处理
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    /**
-     * 处理验证失败异常
-     * @param exception
-     * @return
-     */
-    @ExceptionHandler(BindException.class)
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseData handleValidationException(BindException exception) {
-        List<ObjectError> errorList =exception.getAllErrors();
-        ObjectError error=errorList.get(0);
-        return ResponseData.fail(error.getDefaultMessage());
-    }
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
-
-    /**
-     * 500 - Internal Server Error
-     * 捕获以上异常之外的所有异常
-     */
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(Exception.class)
-    public ResponseData handleException(Exception e) {
-        return ResponseData.fail("内部服务错误 "+e.getMessage());
+    @ExceptionHandler(value = Exception.class)
+    public ResponseData exception(Exception e) {
+        logger.info("Exception",e);
+        return ResponseData.fail("服务器内部错误，请重试");
     }
 }
